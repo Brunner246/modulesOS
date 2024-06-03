@@ -11,7 +11,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-fmodules-ts)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # Additional setup for Clang
-    add_compile_options(-fmodules-ts)
+    add_compile_options(-fmodules)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # Additional setup for MSVC
     add_compile_options(/experimental:module /module:output)
