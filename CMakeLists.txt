@@ -11,10 +11,12 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-fmodules)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
     add_compile_options(/experimental:module)
 endif ()
 
 add_executable(${PROJECT_NAME})
+
 
 # https://cmake.org/cmake/help/latest/command/target_sources.html
 target_sources(${PROJECT_NAME}
@@ -27,7 +29,3 @@ target_sources(${PROJECT_NAME}
         FILES
         src/mod.Test.cppm
 )
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_EXTENSIONS OFF)
