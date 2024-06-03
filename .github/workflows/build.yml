@@ -31,9 +31,11 @@ jobs:
       - name: Setup GCC
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
         run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
-          sudo apt-get install g++-10
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
+          sudo apt-get install gcc-13 g++-13
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
 
       - name: Setup Clang on Ubuntu
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
