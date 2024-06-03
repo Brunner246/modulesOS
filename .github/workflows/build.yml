@@ -15,10 +15,16 @@ jobs:
         include:
           - os: windows-latest
             compiler: msvc
+            cc: cl
+            cxx: cl
           - os: ubuntu-latest
             compiler: gcc
+            cc: gcc
+            cxx: g++
           - os: macos-latest
             compiler: clang
+            cc: clang
+            cxx: clang++
 
     steps:
       - uses: actions/checkout@v4.1.4
@@ -28,12 +34,22 @@ jobs:
         uses: egor-tensin/setup-gcc@v1.3
         with:
           gcc: '11'
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
 
       - name: Install LLVM and Clang
         if: matrix.compiler == 'clang'
         uses: KyleMayes/install-llvm-action@v2.0.3
         with:
           version: "17.0"
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+
+      - name: Set MSVC environment variables
+        if: matrix.compiler == 'msvc'
+        run: echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV && echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
 
       - name: Install ninja-build tool
         uses: seanmiddleditch/gha-setup-ninja@v4
