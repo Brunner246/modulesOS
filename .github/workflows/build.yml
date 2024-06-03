@@ -11,43 +11,53 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        compiler: [ gcc, clang, msvc ]
         include:
           - os: ubuntu-latest
             compiler: gcc
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc-11
+            cxx: g++-11
           - os: ubuntu-latest
             compiler: clang
-            cc: clang-11
-            cxx: clang++-11
+            cc: clang-17
+            cxx: clang++-17
           - os: windows-latest
             compiler: msvc
             cc: cl
             cxx: cl
+          - os: macos-latest
+            compiler: clang
+            cc: clang-17
+            cxx: clang++-17
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup GCC
-        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
+      - name: Setup Clang 17 on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get update
-          sudo apt-get install g++-10
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
+          wget -O - https://apt.llvm.org/llvm.sh | bash -s -- -p clang-17 lld-17
+          echo "CC=$(which clang-17)" >> $GITHUB_ENV
+          echo "CXX=$(which clang++-17)" >> $GITHUB_ENV
 
-      - name: Setup Clang on Ubuntu
-        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
+      - name: Install Ninja on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get update
-          sudo apt-get install clang-11
+          sudo apt-get install ninja-build
 
-      - name: Setup MSVC
-        if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
+      - name: Install Ninja on macOS
+        if: matrix.os == 'macos-latest'
         run: |
-          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --includeRecommended --includeOptional"
+          brew install ninja
+
+      - name: Install Ninja on Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install ninja
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+        run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} -G Ninja
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
