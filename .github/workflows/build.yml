@@ -37,7 +37,8 @@ jobs:
       - name: Setup Clang 17 on Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
-          wget -O - https://apt.llvm.org/llvm.sh | bash -s -- -p clang-17 lld-17
+          sudo apt-get update
+          sudo apt-get install -y clang-17
           echo "CC=$(which clang-17)" >> $GITHUB_ENV
           echo "CXX=$(which clang++-17)" >> $GITHUB_ENV
 
