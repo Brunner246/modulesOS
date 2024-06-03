@@ -14,12 +14,12 @@ jobs:
         include:
           - os: ubuntu-latest
             compiler: gcc
-            cc: gcc-13.3
-            cxx: g++-13.3
+            cc: gcc-10
+            cxx: g++-10
           - os: ubuntu-latest
             compiler: clang
-            cc: clang-18.1.0
-            cxx: clang++-18.1.0
+            cc: clang-11
+            cxx: clang++-11
           - os: windows-latest
             compiler: msvc
             cc: cl
@@ -31,11 +31,9 @@ jobs:
       - name: Setup GCC
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
-          sudo apt-get install gcc-13 g++-13
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+          sudo apt-get install g++-10
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
 
       - name: Setup Clang on Ubuntu
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang'
@@ -47,11 +45,6 @@ jobs:
         if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
         run: |
           choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --includeRecommended --includeOptional"
-
-      - name: Setup Clang on MacOS
-        if: matrix.os == 'macos-latest' && matrix.compiler == 'clang'
-        run: |
-          brew install llvm
 
       - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}

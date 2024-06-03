@@ -17,7 +17,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 add_executable(${PROJECT_NAME} main.cpp
-        mod.Test.cppm)
+       )
 
 
 target_sources(${PROJECT_NAME} PRIVATE
