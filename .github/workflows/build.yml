@@ -18,9 +18,9 @@ jobs:
             cc: cl
             cxx: cl
           - os: ubuntu-latest
-            compiler: gcc
-            cc: gcc
-            cxx: g++
+            compiler: clang
+            cc: clang
+            cxx: clang++
           - os: macos-latest
             compiler: clang
             cc: clang
