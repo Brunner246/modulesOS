@@ -7,26 +7,26 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # Additional setup for GCC
-    add_compile_options(-fmodules-ts)
+    message(FATAL_ERROR "This project requires a compiler with support for C++23 modules. GCC does not support C++23 modules yet.")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    # Additional setup for Clang
     add_compile_options(-fmodules)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # Additional setup for MSVC
-    add_compile_options(/experimental:module /module:output)
-endif()
+    add_compile_options(/experimental:module)
+endif ()
 
-add_executable(${PROJECT_NAME} main.cpp
-       )
+add_executable(${PROJECT_NAME})
 
-
-target_sources(${PROJECT_NAME} PRIVATE
-        FILE_SET all_my_modules TYPE CXX_MODULES
+# https://cmake.org/cmake/help/latest/command/target_sources.html
+target_sources(${PROJECT_NAME}
+        PRIVATE
+        src/main.cpp
+        PRIVATE
+        FILE_SET cxx_modules TYPE CXX_MODULES
         BASE_DIRS
         ${PROJECT_SOURCE_DIR}
         FILES
-        mod.Test.cppm)
+        src/mod.Test.cppm
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
