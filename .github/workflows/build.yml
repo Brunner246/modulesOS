@@ -11,16 +11,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, macos-latest ] # , ubuntu-latest
+        os: [ windows-latest, macos-latest, ubuntu-latest ] #
         include:
           - os: windows-latest
             compiler: msvc
             cc: cl
             cxx: cl
-#          - os: ubuntu-latest
-#            compiler: gcc
-#            cc: gcc
-#            cxx: g++
+          - os: ubuntu-latest
+            compiler: gcc
+            cc: gcc
+            cxx: g++
           - os: macos-latest
             compiler: clang
             cc: clang
@@ -33,14 +33,14 @@ jobs:
         if: matrix.compiler == 'msvc'
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
-#      - name: Install GCC
-#        if: matrix.compiler == 'gcc'
-#        uses: egor-tensin/setup-gcc@v1.3
-#        with:
-#          gcc: '11'
-#        env:
-#          CC: ${{ matrix.cc }}
-#          CXX: ${{ matrix.cxx }}
+      - name: Install GCC
+        if: matrix.compiler == 'gcc'
+        uses: egor-tensin/setup-gcc@v1.3
+        with:
+          gcc: '13.3'
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
 
       - name: Install LLVM and Clang
         if: matrix.compiler == 'clang'
